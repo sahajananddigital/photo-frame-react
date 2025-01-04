@@ -1,22 +1,38 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
-import { Button, Dialog } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  Grid,
+  TextField,
+  Typography,
+  Box,
+  Paper,
+} from "@mui/material";
 
 const App = () => {
   const canvasRef = useRef(null);
   const [images, setImages] = useState([null, null, null, null]);
   const [croppedImages, setCroppedImages] = useState([null, null, null, null]);
   const [text, setText] = useState("");
+  const [text2, setText2] = useState(""); // New state for the second text box
   const [currentCropIndex, setCurrentCropIndex] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [cropArea, setCropArea] = useState(null);
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
 
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href = `https://fonts.googleapis.com/css2?family=Rasa:ital,wght@0,300..700;1,300..700&display=swap`;
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }, []);
+
   const cropSizes = [
     { width: 1250, height: 600 },
-    { width: 150, height: 100 },
-    { width: 160, height: 90 },
+    { width: 588, height: 565 },
+    { width: 588, height: 565 },
     { width: 1250, height: 600 },
   ];
 
@@ -72,90 +88,39 @@ const App = () => {
       newCroppedImages[currentCropIndex] = croppedImage;
       setCroppedImages(newCroppedImages);
       setIsCropDialogOpen(false);
-      drawCanvas(newCroppedImages, text);
     };
   };
 
-  const handleTextChange = (e) => {
-    const newText = e.target.value;
-    setText(newText);
-    drawCanvas(croppedImages, newText);
-  };
-
-  // const drawCanvas = (uploadedImages, inputText) => {
-  //   const canvas = canvasRef.current;
-  //   const ctx = canvas.getContext("2d");
-
-  //   const background = new Image();
-  //   background.src = "../public/background.jpeg"; // Replace with your background image path
-  //   background.crossOrigin = "anonymous";
-  //   background.onload = () => {
-  //     canvas.width = background.width;
-  //     canvas.height = background.height;
-
-  //     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-  //     uploadedImages.forEach((imageSrc, idx) => {
-  //       if (imageSrc) {
-  //         const img = new Image();
-  //         img.src = imageSrc;
-  //         img.onload = () => {
-  //           const positions = [
-  //             { x: 95, y: 400 },
-  //             { x: 200, y: 50 },
-  //             { x: 50, y: 200 },
-  //             { x: 200, y: 200 },
-  //           ];
-  //           const { x, y } = positions[idx];
-  //           const { width, height } = cropSizes[idx] || {};
-  //           if (width && height) {
-  //             ctx.drawImage(img, x, y, width, height);
-  //           }
-  //         };
-  //       }
-  //     });
-
-  //     ctx.font = "20px Arial";
-  //     ctx.fillStyle = "#FFFFFF";
-  //     ctx.fillText(inputText, 50, 400);
-  //   };
-  // };
-
-
-  const drawCanvas = (uploadedImages, inputText) => {
+  const drawCanvas = (uploadedImages, inputText1, inputText2) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-  
+
     const background = new Image();
-    background.src = "../public/background.jpeg"; // Replace with your background image path
+    background.src = "../public/background.jpg"; // Replace with your background image path
     background.crossOrigin = "anonymous";
     background.onload = () => {
       canvas.width = background.width;
       canvas.height = background.height;
-  
-      // Draw the background image
+
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-  
+
       uploadedImages.forEach((imageSrc, idx) => {
         if (imageSrc) {
           const img = new Image();
           img.src = imageSrc;
           img.onload = () => {
             const positions = [
-             { x: 95, y: 400 },
-              { x: 200, y: 50 },
-              { x: 50, y: 200 },
+              { x: 95, y: 400 },
+              { x: 95, y: 1064 },
+              { x: 755, y: 1064 },
               { x: 95, y: 1700 },
             ];
             const { x, y } = positions[idx];
             const { width, height } = cropSizes[idx] || {};
-            const cornerRadius = 20; // Adjust the radius of the corners
-  
+            const cornerRadius = 20;
+
             if (width && height) {
-              // Save the canvas state
               ctx.save();
-  
-              // Draw rounded rectangle clipping path
               ctx.beginPath();
               ctx.moveTo(x + cornerRadius, y);
               ctx.lineTo(x + width - cornerRadius, y);
@@ -173,25 +138,38 @@ const App = () => {
               ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
               ctx.closePath();
               ctx.clip();
-  
-              // Draw the image inside the rounded rectangle
               ctx.drawImage(img, x, y, width, height);
-  
-              // Restore the canvas state
               ctx.restore();
             }
           };
         }
       });
-  
-      // Draw the text
-      ctx.font = "20px Arial";
-      ctx.fillStyle = "#FFFFFF"; // White color
-      ctx.fillText(inputText, 50, 400);
+
+      ctx.font = `bold 50px Rasa sans-serif`;
+      ctx.fillStyle = "#af332b";
+      ctx.textAlign = "center";
+
+      // Draw first text
+      ctx.fillText(inputText1, canvas.width / 2, canvas.height - 110);
+
+      // Draw second text
+      ctx.fillText(inputText2, canvas.width / 2, canvas.height - 40);
     };
   };
-  
-  
+
+  // Automatically redraw canvas whenever text or cropped images change
+  useEffect(() => {
+    drawCanvas(croppedImages, text, text2);
+  }, [croppedImages, text, text2]);
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+  };
+
+  const handleText2Change = (e) => {
+    setText2(e.target.value);
+  };
+
   const downloadCanvas = () => {
     const canvas = canvasRef.current;
     const link = document.createElement("a");
@@ -201,45 +179,96 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Canvas Image Generator with Fixed Size Cropping</h1>
-      {[...Array(4)].map((_, index) => (
-        <div key={index}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(index, e)}
-          />
-        </div>
-      ))}
-      <input
-        type="text"
-        placeholder="Enter text"
-        value={text}
-        onChange={handleTextChange}
-      />
-      <canvas ref={canvasRef} style={{ border: "1px solid #000" }}></canvas>
-      <button onClick={downloadCanvas}>Download Canvas</button>
-
+    <Box p={2}>
+      <Typography variant="h4" gutterBottom>
+        Canvas Image Generator
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            {[...Array(4)].map((_, index) => (
+              <Box key={index} mb={2}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  fullWidth
+                  color="primary"
+                >
+                  Upload Image {index + 1}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={(e) => handleImageUpload(index, e)}
+                  />
+                </Button>
+              </Box>
+            ))}
+            <TextField
+              fullWidth
+              label="Enter First Text"
+              variant="outlined"
+              value={text}
+              onChange={handleTextChange}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Enter Second Text"
+              variant="outlined"
+              value={text2}
+              onChange={handleText2Change}
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 2, textAlign: "center" }}>
+            <canvas
+              ref={canvasRef}
+              style={{
+                border: "1px solid #000",
+                maxWidth: "100%",
+              }}
+            ></canvas>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={downloadCanvas}
+              sx={{ mt: 2 }}
+            >
+              Download Canvas
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
       <Dialog open={isCropDialogOpen} onClose={() => setIsCropDialogOpen(false)}>
-        <div style={{ width: "400px", height: "400px", position: "relative" }}>
+        <Box
+          style={{
+            width: "400px",
+            height: "400px",
+            position: "relative",
+          }}
+        >
           {images[currentCropIndex] && cropSizes[currentCropIndex] && (
             <Cropper
               image={images[currentCropIndex]}
               crop={crop}
               zoom={zoom}
               aspect={
-                cropSizes[currentCropIndex].width / cropSizes[currentCropIndex].height
+                cropSizes[currentCropIndex].width /
+                cropSizes[currentCropIndex].height
               }
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onCropComplete={handleCropComplete}
             />
           )}
-        </div>
-        <Button onClick={cropImage}>Crop</Button>
+        </Box>
+        <Button onClick={cropImage} fullWidth variant="contained">
+          Crop
+        </Button>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 
