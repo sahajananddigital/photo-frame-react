@@ -26,19 +26,18 @@ jobs:
         id: find_apps
         run: |
           # Find all directories containing vite.config.js
-          apps=$(find . -name vite.config.js -exec dirname {} \;)
-          echo "apps=$apps"
+          apps=$(find . -type f -name vite.config.js -exec dirname {} \;)
+          echo "Found apps: $apps"
           echo "apps=$apps" >> $GITHUB_ENV
 
       # Step 4: Build each Vite app dynamically
       - name: Build Vite apps
         run: |
-          # Create a central gh-pages directory for deployment
           mkdir -p gh-pages
           
           # Iterate over each app directory
           for app in $apps; do
-            echo "Processing $app..."
+            echo "Processing app at $app..."
             cd $app
             
             # Check for a valid lock file (npm or yarn)
