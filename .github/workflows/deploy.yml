@@ -1,4 +1,4 @@
-name: Deploy Vite React Apps to GitHub Pages
+name: Deploy Vite React Apps Dynamically to GitHub Pages
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 18 # Ensure compatibility with dependencies
           cache: npm
 
       # Step 3: Discover all Vite app directories dynamically
