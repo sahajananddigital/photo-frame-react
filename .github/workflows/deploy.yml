@@ -1,4 +1,4 @@
-name: Deploy Vite React Apps Dynamically to GitHub Pages
+name: Deploy Vite React Apps to GitHub Pages
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -18,26 +18,34 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Use a compatible Node.js version
+          node-version: 18 # Compatible Node.js version
           cache: 'npm'
 
       # Step 3: Discover all Vite app directories dynamically
       - name: Find Vite apps
         id: find_apps
         run: |
-          # Find all directories containing vite.config.js (assuming these are Vite apps)
+          # Find all directories containing vite.config.js (Vite apps)
           apps=$(find . -name vite.config.js -exec dirname {} \;)
           echo "apps=$apps" >> $GITHUB_ENV
 
       # Step 4: Build each Vite app dynamically
       - name: Build Vite apps
         run: |
+          mkdir -p gh-pages
           for app in $apps; do
             echo "Building $app..."
             cd $app
-            npm ci
+            if [ -f package-lock.json ]; then
+              npm ci
+            elif [ -f yarn.lock ]; then
+              yarn install
+            else
+              echo "No lock file found in $app. Exiting."
+              exit 1
+            fi
             npm run build
-            # Move the dist output to a centralized directory for deployment
+            # Copy the dist folder to a centralized directory for deployment
             dest="../gh-pages/$(basename $app)"
             mkdir -p $dest
             cp -r dist/* $dest
