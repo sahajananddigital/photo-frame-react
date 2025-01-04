@@ -14,20 +14,13 @@ const App = () => {
   const canvasRef = useRef(null);
   const [images, setImages] = useState([null, null, null, null]);
   const [croppedImages, setCroppedImages] = useState([null, null, null, null]);
-  const [text, setText] = useState("");
-  const [text2, setText2] = useState(""); // New state for the second text box
+  const [text, setText] = useState(""); // First text box
+  const [text2, setText2] = useState(""); // Second text box
   const [currentCropIndex, setCurrentCropIndex] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [cropArea, setCropArea] = useState(null);
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
-
-  useEffect(() => {
-    const link = document.createElement("link");
-    link.href = `https://fonts.googleapis.com/css2?family=Rasa:ital,wght@0,300..700;1,300..700&display=swap`;
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-  }, []);
 
   const cropSizes = [
     { width: 1250, height: 600 },
@@ -35,6 +28,13 @@ const App = () => {
     { width: 588, height: 565 },
     { width: 1250, height: 600 },
   ];
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href = `https://fonts.googleapis.com/css2?family=Rasa:ital,wght@0,300..700;1,300..700&display=swap`;
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }, []);
 
   const handleImageUpload = (index, event) => {
     const file = event.target.files[0];
@@ -91,7 +91,7 @@ const App = () => {
     };
   };
 
-  const drawCanvas = (uploadedImages, inputText1, inputText2) => {
+  const drawCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
@@ -104,7 +104,7 @@ const App = () => {
 
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-      uploadedImages.forEach((imageSrc, idx) => {
+      croppedImages.forEach((imageSrc, idx) => {
         if (imageSrc) {
           const img = new Image();
           img.src = imageSrc;
@@ -150,16 +150,16 @@ const App = () => {
       ctx.textAlign = "center";
 
       // Draw first text
-      ctx.fillText(inputText1, canvas.width / 2, canvas.height - 110);
+      ctx.fillText(text, canvas.width / 2, canvas.height - 110);
 
       // Draw second text
-      ctx.fillText(inputText2, canvas.width / 2, canvas.height - 40);
+      ctx.fillText(text2, canvas.width / 2, canvas.height - 40);
     };
   };
 
-  // Automatically redraw canvas whenever text or cropped images change
+  // Automatically redraw the canvas whenever `croppedImages`, `text`, or `text2` changes
   useEffect(() => {
-    drawCanvas(croppedImages, text, text2);
+    drawCanvas();
   }, [croppedImages, text, text2]);
 
   const handleTextChange = (e) => {
