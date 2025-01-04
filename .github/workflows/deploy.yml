@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18 # Ensure compatibility with dependencies
-          cache: npm
 
       # Step 3: Discover all Vite app directories dynamically
       - name: Find Vite apps
