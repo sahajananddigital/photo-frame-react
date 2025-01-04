@@ -1,0 +1,51 @@
+name: Deploy Vite React Apps Dynamically to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Step 3: Discover all Vite app directories dynamically
+      - name: Find Vite apps
+        id: find_apps
+        run: |
+          # Find all directories containing vite.config.js (assuming these are Vite apps)
+          apps=$(find . -name vite.config.js -exec dirname {} \;)
+          echo "apps=$apps" >> $GITHUB_ENV
+
+      # Step 4: Build each Vite app dynamically
+      - name: Build Vite apps
+        run: |
+          for app in $apps; do
+            echo "Building $app..."
+            cd $app
+            npm ci
+            npm run build
+            # Move the dist output to a centralized directory for deployment
+            dest="../gh-pages/$(basename $app)"
+            mkdir -p $dest
+            cp -r dist/* $dest
+            cd -
+          done
+
+      # Step 5: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages
