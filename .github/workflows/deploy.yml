@@ -18,37 +18,51 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Compatible Node.js version
-          cache: 'npm'
+          node-version: 18
+          cache: npm
 
       # Step 3: Discover all Vite app directories dynamically
       - name: Find Vite apps
         id: find_apps
         run: |
-          # Find all directories containing vite.config.js (Vite apps)
+          # Find all directories containing vite.config.js
           apps=$(find . -name vite.config.js -exec dirname {} \;)
+          echo "apps=$apps"
           echo "apps=$apps" >> $GITHUB_ENV
 
       # Step 4: Build each Vite app dynamically
       - name: Build Vite apps
         run: |
+          # Create a central gh-pages directory for deployment
           mkdir -p gh-pages
+          
+          # Iterate over each app directory
           for app in $apps; do
-            echo "Building $app..."
+            echo "Processing $app..."
             cd $app
+            
+            # Check for a valid lock file (npm or yarn)
             if [ -f package-lock.json ]; then
+              echo "Using npm for $app..."
               npm ci
             elif [ -f yarn.lock ]; then
+              echo "Using yarn for $app..."
               yarn install
             else
-              echo "No lock file found in $app. Exiting."
-              exit 1
+              echo "No lock file found in $app. Skipping."
+              cd -
+              continue
             fi
+            
+            # Build the app
             npm run build
-            # Copy the dist folder to a centralized directory for deployment
+            
+            # Copy the dist folder to gh-pages directory
             dest="../gh-pages/$(basename $app)"
             mkdir -p $dest
             cp -r dist/* $dest
+            
+            # Return to the root directory
             cd -
           done
 
