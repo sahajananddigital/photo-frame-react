@@ -96,7 +96,7 @@ const App = () => {
     const ctx = canvas.getContext("2d");
 
     const background = new Image();
-    background.src = "../public/background.jpg"; // Replace with your background image path
+    background.src = "./background.jpg"; // Replace with your background image path
     background.crossOrigin = "anonymous";
     background.onload = () => {
       canvas.width = background.width;
