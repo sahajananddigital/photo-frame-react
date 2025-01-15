@@ -4,5 +4,5 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/photo-frame-react/gurukul-yuvati-seminar/",
+  base: "/photo-frame-react/gurukul-yuvati-semimar/",
 });
