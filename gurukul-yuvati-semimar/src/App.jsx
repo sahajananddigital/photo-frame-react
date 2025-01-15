@@ -125,7 +125,7 @@ const App = () => {
         }
       });
   
-      ctx.font = `bold 50px Rasa sans-serif`;
+      ctx.font = `bold 50px 'Rasa', sans-serif`;
       ctx.fillStyle = "#af332b";
       ctx.textAlign = "left";
   

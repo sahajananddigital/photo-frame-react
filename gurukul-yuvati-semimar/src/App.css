@@ -5,6 +5,14 @@
   text-align: center;
 }
 
+body {
+  font-family: 'Rasa', sans-serif;
+}
+
+canvas {
+  font-family: 'Rasa', sans-serif;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
