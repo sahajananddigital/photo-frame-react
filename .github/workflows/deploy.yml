@@ -27,6 +27,10 @@ jobs:
           # Find all directories containing vite.config.js
           apps=$(find . -type f -name vite.config.js -exec dirname {} \;)
           echo "Found apps: $apps"
+          
+          # Convert newlines to a single space for GitHub Actions environment variable
+          apps=$(echo "$apps" | tr '\n' ' ')
+          echo "Formatted apps: $apps"
           echo "apps=$apps" >> $GITHUB_ENV
 
       # Step 4: Build each Vite app dynamically
