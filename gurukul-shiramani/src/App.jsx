@@ -93,17 +93,22 @@ const App = () => {
 
   const drawCanvas = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+  
     const ctx = canvas.getContext("2d");
-
+  
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
     const background = new Image();
     background.src = "./background.jpg"; // Replace with your background image path
     background.crossOrigin = "anonymous";
     background.onload = () => {
       canvas.width = background.width;
       canvas.height = background.height;
-
+  
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
+  
       croppedImages.forEach((imageSrc, idx) => {
         if (imageSrc) {
           const img = new Image();
@@ -118,13 +123,18 @@ const App = () => {
             const { x, y } = positions[idx];
             const { width, height } = cropSizes[idx] || {};
             const cornerRadius = 20;
-
+  
             if (width && height) {
               ctx.save();
               ctx.beginPath();
               ctx.moveTo(x + cornerRadius, y);
               ctx.lineTo(x + width - cornerRadius, y);
-              ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
+              ctx.quadraticCurveTo(
+                x + width,
+                y,
+                x + width,
+                y + cornerRadius
+              );
               ctx.lineTo(x + width, y + height - cornerRadius);
               ctx.quadraticCurveTo(
                 x + width,
@@ -133,7 +143,12 @@ const App = () => {
                 y + height
               );
               ctx.lineTo(x + cornerRadius, y + height);
-              ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
+              ctx.quadraticCurveTo(
+                x,
+                y + height,
+                x,
+                y + height - cornerRadius
+              );
               ctx.lineTo(x, y + cornerRadius);
               ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
               ctx.closePath();
@@ -144,18 +159,18 @@ const App = () => {
           };
         }
       });
-
-      ctx.font = `bold 50px Rasa sans-serif`;
+  
+      ctx.font = `bold 50px Rasa`;
       ctx.fillStyle = "#af332b";
       ctx.textAlign = "center";
-
+  
       // Draw first text
       ctx.fillText(text, canvas.width / 2, canvas.height - 110);
-
+  
       // Draw second text
       ctx.fillText(text2, canvas.width / 2, canvas.height - 40);
     };
-  };
+  };  
 
   // Automatically redraw the canvas whenever `croppedImages`, `text`, or `text2` changes
   useEffect(() => {
