@@ -159,7 +159,7 @@ const App = () => {
           };
         }
       });
-  
+      
       ctx.font = `bold 50px Rasa`;
       ctx.fillStyle = "#af332b";
       ctx.textAlign = "center";
