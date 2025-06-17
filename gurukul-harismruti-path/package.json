@@ -1,5 +1,6 @@
 {
   "name": "vite-project",
+  "description": "Harismruti Image Editor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
