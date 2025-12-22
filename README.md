@@ -9,3 +9,5 @@ https://sahajananddigital.github.io/photo-frame-react/gurukul-yuvati-semimar/
 ## Harismruti Path
 https://sahajananddigital.github.io/photo-frame-react/gurukul-harismruti-path/
 
+## Patel Samaj
+https://sahajananddigital.github.io/photo-frame-react/patel-samaj/
