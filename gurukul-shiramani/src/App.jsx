@@ -26,7 +26,7 @@ const App = () => {
     { width: 1250, height: 600 },
     { width: 588, height: 565 },
     { width: 588, height: 565 },
-    { width: 1250, height: 600 },
+    { width: 1250, height: 570 },
   ];
 
   useEffect(() => {
@@ -115,10 +115,10 @@ const App = () => {
           img.src = imageSrc;
           img.onload = () => {
             const positions = [
-              { x: 95, y: 400 },
-              { x: 95, y: 1064 },
-              { x: 755, y: 1064 },
-              { x: 95, y: 1700 },
+              { x: 95, y: 500 },
+              { x: 95, y: 1135 },
+              { x: 755, y: 1135 },
+              { x: 95, y: 1740 },
             ];
             const { x, y } = positions[idx];
             const { width, height } = cropSizes[idx] || {};
