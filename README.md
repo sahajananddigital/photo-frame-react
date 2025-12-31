@@ -11,3 +11,6 @@ https://sahajananddigital.github.io/photo-frame-react/gurukul-harismruti-path/
 
 ## Patel Samaj
 https://sahajananddigital.github.io/photo-frame-react/patel-samaj/
+
+# Sarambhada Gir Gaushala
+https://shreegopalgaushala.org/donation
