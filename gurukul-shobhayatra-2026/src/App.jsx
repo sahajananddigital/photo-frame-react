@@ -106,7 +106,7 @@ const App = () => {
           img.src = imageSrc;
           img.onload = () => {
             const positions = [
-              { x: 745, y: 980 },
+              { x: 755, y: 1015 },
             ];
             const { x, y } = positions[idx];
             const { width, height } = cropSizes[idx] || {};
@@ -127,10 +127,10 @@ const App = () => {
   
       ctx.font = `bold 80px 'Rasa', sans-serif`;
       ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "right";
-  
+      ctx.textAlign = "center";
+      
       // Draw first text
-      ctx.fillText(text, 1200, canvas.height - 850);
+      ctx.fillText(text, 1030, canvas.height - 830);
       };
   };
   
