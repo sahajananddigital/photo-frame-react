@@ -14,3 +14,7 @@ https://sahajananddigital.github.io/photo-frame-react/patel-samaj/
 
 # Sarambhada Gir Gaushala
 https://shreegopalgaushala.org/donation
+
+## Shiksha Skills
+https://sahajananddigital.github.io/photo-frame-react/shiksha-certificate-post
+
